@@ -8,11 +8,6 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Debug - List files
-      run: |
-        ls -la
-        echo "Python files:"
-        ls -la *.py || echo "No Python files found"
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -20,18 +15,15 @@ jobs:
     - name: Install dependencies
       run: |
         pip install pyinstaller wxpython
-    - name: Debug - Check Python and dependencies
-      run: |
-        python --version
-        pip list | grep -E "(pyinstaller|wxpython)"
     - name: Build app
       run: |
-        pyinstaller --onefile --windowed --name "Consolidator" --target-arch universal2 consolidator.py
-    - name: Make executable
+        pyinstaller --onedir --windowed --name "Consolidator" consolidator.py
+    - name: Create DMG (optional)
       run: |
-        chmod +x dist/"Consolidator"
+        brew install create-dmg
+        create-dmg --volname "Consolidator" --window-pos 200 120 --window-size 600 300 --icon-size 100 --icon "Consolidator.app" 175 120 --hide-extension "Consolidator.app" --app-drop-link 425 120 "Consolidator.dmg" "dist/"
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Consolidator
+        name: Consolidator-macOS
         path: dist/
