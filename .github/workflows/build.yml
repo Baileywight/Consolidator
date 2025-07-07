@@ -3,12 +3,16 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
-
 jobs:
   build-macos:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Debug - List files
+      run: |
+        ls -la
+        echo "Python files:"
+        ls -la *.py || echo "No Python files found"
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -16,6 +20,10 @@ jobs:
     - name: Install dependencies
       run: |
         pip install pyinstaller wxpython
+    - name: Debug - Check Python and dependencies
+      run: |
+        python --version
+        pip list | grep -E "(pyinstaller|wxpython)"
     - name: Build app
       run: |
         pyinstaller --onefile --windowed --name "Consolidator" --target-arch universal2 consolidator.py
