@@ -18,33 +18,6 @@ jobs:
         pip install pyinstaller wxpython
     - name: Build app
       run: |
-        pyinstaller --onefile --windowed --name "Consolidator" consolidator.py
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: Code-Consolidator-macOS
-        path: dist/
-
-name: Consolidator
-on: 
-  push:
-    branches: [ main ]
-  workflow_dispatch:
-
-jobs:
-  build-macos:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    - name: Install dependencies
-      run: |
-        pip install pyinstaller wxpython
-    - name: Build app
-      run: |
         pyinstaller --onefile --windowed --name "Consolidator" --target-arch universal2 consolidator.py
     - name: Make executable
       run: |
